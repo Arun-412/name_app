@@ -11,10 +11,11 @@ function normalize_name($s) {
 
 function letter_value($ch) {
     $map = [
-        'a'=>1,'b'=>2,'c'=>3,'d'=>4,'e'=>5,'f'=>6,'g'=>7,'h'=>8,'i'=>9,
-        'j'=>1,'k'=>2,'l'=>3,'m'=>4,'n'=>5,'o'=>6,'p'=>7,'q'=>8,'r'=>9,
-        's'=>1,'t'=>2,'u'=>3,'v'=>4,'w'=>5,'x'=>6,'y'=>7,'z'=>8
+         "a"=>1, "b"=>2, "c"=>3, "d"=>4, "e"=>5, "f"=>8, "g"=>3, "h"=>5, "i"=>1,
+  "j"=>1, "k"=>2, "l"=>3, "m"=>4, "n"=>5, "o"=>7, "p"=>8, "q"=>1, "r"=>2,
+  "s"=>3, "t"=>4, "u"=>6, "v"=>6, "w"=>6, "x"=>5, "y"=>1, "z"=>7
     ];
+
     return $map[$ch] ?? 0;
 }
 
@@ -68,7 +69,7 @@ if ($action === 'list') {
     if ($search !== '') { $where .= ' AND (original_name LIKE :s OR normalized_name LIKE :s)'; $params[':s'] = "%$search%"; }
     if ($number !== '') { $where .= ' AND computed_number = :num'; $params[':num'] = $number; }
 
-    $sql = "SELECT id, original_name, computed_number, created_at FROM names WHERE $where ORDER BY created_at DESC";
+    $sql = "SELECT id, original_name, normalized_name, computed_number, created_at FROM names WHERE $where ORDER BY created_at DESC";
     $stmt = $pdo->prepare($sql); $stmt->execute($params);
     echo json_encode(['status'=>'ok','data'=>$stmt->fetchAll()]);
     exit;
